@@ -1289,11 +1289,17 @@ ngx_rtmp_relay_on_status(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
 
     ngx_memzero(&v, sizeof(v));
     if (h->type == NGX_RTMP_MSG_AMF_META) {
-        ngx_rtmp_receive_amf(s, in, in_elts_meta,
-                sizeof(in_elts_meta) / sizeof(in_elts_meta[0]));
+        if (ngx_rtmp_receive_amf(s, in, in_elts_meta,
+                             sizeof(in_elts_meta) / sizeof(in_elts_meta[0])) != NGX_OK)
+        {
+            return NGX_ERROR;
+        }
     } else {
-        ngx_rtmp_receive_amf(s, in, in_elts,
-                sizeof(in_elts) / sizeof(in_elts[0]));
+        if (ngx_rtmp_receive_amf(s, in, in_elts,
+                                 sizeof(in_elts) / sizeof(in_elts[0])) != NGX_OK)
+        {
+            return NGX_ERROR;
+        }
     }
 
     ngx_log_debug3(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
