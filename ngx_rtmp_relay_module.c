@@ -1292,12 +1292,18 @@ ngx_rtmp_relay_on_status(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
         if (ngx_rtmp_receive_amf(s, in, in_elts_meta,
                              sizeof(in_elts_meta) / sizeof(in_elts_meta[0])) != NGX_OK)
         {
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
+                      "relay: failed to parse AMF message");
+                      
             return NGX_ERROR;
         }
     } else {
         if (ngx_rtmp_receive_amf(s, in, in_elts,
                                  sizeof(in_elts) / sizeof(in_elts[0])) != NGX_OK)
         {
+            ngx_log_error(NGX_LOG_ERR, s->connection->log, 0,
+                      "relay: failed to parse AMF metadata");
+
             return NGX_ERROR;
         }
     }
